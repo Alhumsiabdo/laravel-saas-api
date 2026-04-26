@@ -11,6 +11,7 @@ use App\Models\Workspace;
 use App\Services\ProjectService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Support\Facades\Gate;
 
 class ProjectController extends Controller
 {
@@ -20,34 +21,34 @@ class ProjectController extends Controller
 
     public function index(Workspace $workspace): AnonymousResourceCollection
     {
-        $this->authorize('view', $workspace);
+        Gate::authorize('view', $workspace);
         $projects = $this->projectService->getAll($workspace);
         return ProjectResource::collection($projects);
     }
 
     public function store(CreateProjectRequest $request, Workspace $workspace): ProjectResource
     {
-        $this->authorize('view', $workspace);
+        Gate::authorize('view', $workspace);
         $project = $this->projectService->create($workspace, $request->validated());
         return new ProjectResource($project);
     }
 
     public function show(Workspace $workspace, Project $project): ProjectResource
     {
-        $this->authorize('view', $project);
+        Gate::authorize('view', $project);
         return new ProjectResource($project->load('workspace'));
     }
 
     public function update(UpdateProjectRequest $request, Workspace $workspace, Project $project): ProjectResource
     {
-        $this->authorize('update', $project);
+        Gate::authorize('update', $project);
         $project = $this->projectService->update($project, $request->validated());
         return new ProjectResource($project);
     }
 
     public function destroy(Workspace $workspace, Project $project): JsonResponse
     {
-        $this->authorize('delete', $project);
+        Gate::authorize('delete', $project);
         $this->projectService->delete($project);
         return response()->json(['message' => 'Project deleted']);
     }

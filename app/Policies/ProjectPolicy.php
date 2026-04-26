@@ -19,7 +19,7 @@ class ProjectPolicy
     {
         return $project->workspace->members()
             ->where('user_id', $user->id)
-            ->whereIn('pivot_role', ['owner', 'admin'])
+            ->whereIn('workspace_user.role', ['owner', 'admin'])
             ->exists();
     }
 
