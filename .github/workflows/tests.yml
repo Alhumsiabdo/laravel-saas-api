@@ -23,7 +23,8 @@ jobs:
           php-version: '8.3'
           extensions: pdo_mysql
 
-      - run: composer install
+      - run: composer install --no-interaction --prefer-dist --no-scripts
+      - run: php artisan package:discover --ansi
 
       - run: cp .env.example .env && php artisan key:generate
 
