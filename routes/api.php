@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ProjectController;
+use App\Http\Controllers\Api\TaskController;
 use App\Http\Controllers\Api\WorkspaceController;
 use Illuminate\Support\Facades\Route;
 
@@ -13,5 +14,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::apiResource('workspaces', WorkspaceController::class);
     Route::apiResource('workspaces.projects', ProjectController::class)
+        ->shallow();
+    Route::apiResource('projects.tasks', TaskController::class)
         ->shallow();
 });
