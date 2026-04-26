@@ -10,6 +10,7 @@ use App\Models\Workspace;
 use App\Services\WorkspaceService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Support\Facades\Gate;
 
 class WorkspaceController extends Controller
 {
@@ -35,20 +36,20 @@ class WorkspaceController extends Controller
 
     public function show(Workspace $workspace): WorkspaceResource
     {
-        $this->authorize('view', $workspace);
+        Gate::authorize('view', $workspace);
         return new WorkspaceResource($workspace->load('owner'));
     }
 
     public function update(UpdateWorkspaceRequest $request, Workspace $workspace): WorkspaceResource
     {
-        $this->authorize('update', $workspace);
+        Gate::authorize('update', $workspace);
         $workspace = $this->workspaceService->update($workspace, $request->validated());
         return new WorkspaceResource($workspace);
     }
 
     public function destroy(Workspace $workspace): JsonResponse
     {
-        $this->authorize('delete', $workspace);
+        Gate::authorize('delete', $workspace);
         $this->workspaceService->delete($workspace);
         return response()->json(['message' => 'Workspace deleted'], 200);
     }
